@@ -6,7 +6,7 @@ import Home from "./Home"
 import Login from "./Login" 
 import Post from "./Post" 
 import Signup from "./Signup"
- import Hi from "./Hi"
+
 export  {
     Addpost,
     Allpost,
@@ -15,5 +15,4 @@ export  {
     Login,
     Post,
     Signup,
-    Hi
 }
