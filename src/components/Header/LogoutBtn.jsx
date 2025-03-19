@@ -9,6 +9,7 @@ function LogoutBtn({ className = "" }) {
     try {
       await authService.logout();
       dispatch(logout());
+      
     } catch (error) {
       alert("Logout failed! Please try again.");
       console.error("Logout failed:", error);

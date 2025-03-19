@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import databaseService from "../appwrite/config_database";
 import { Container, Postcard } from "../components";
+import { useSelector } from "react-redux";
 
 function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const isLoggedIn=useSelector((state) => state.auth.userData);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -22,6 +25,12 @@ function Home() {
 
     fetchPosts();
   }, []);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setPosts([]);
+    }
+  }, [isLoggedIn]);
+
 
   if (loading) {
     return (
@@ -34,7 +43,7 @@ function Home() {
   return (
     <div className="w-full py-8">
       <Container>
-        {posts.length === 0 ? (
+        {  !isLoggedIn ||  posts.length === 0 ? (
           <div className="text-center mt-10">
             <h1 className="text-2xl font-bold text-gray-700">
               Login to read posts
