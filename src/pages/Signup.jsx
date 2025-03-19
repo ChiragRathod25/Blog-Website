@@ -1,10 +1,11 @@
-import {Signup as SignupComponent} from "../components";
+import { Signup as SignupComponent } from "../components";
 
-function Signup(){
-    return (
-        <div className="py-8">
-            <SignupComponent/>
-        </div>
-    )
+function Signup() {
+  return (
+    <div className="flex justify-center items-center min-h-screen py-8">
+      <SignupComponent />
+    </div>
+  );
 }
-export default Signup
+
+export default Signup;

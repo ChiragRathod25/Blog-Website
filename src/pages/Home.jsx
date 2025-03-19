@@ -4,44 +4,54 @@ import { Container, Postcard } from "../components";
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    databaseService.getPosts([]).then((posts) => {
-      if (posts) setPosts(posts.documents);
-    });
-    console.log(posts);
+    const fetchPosts = async () => {
+      try {
+        const response = await databaseService.getPosts([]);
+        if (response) {
+          setPosts(response.documents);
+        }
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
   }, []);
 
-  console.log("It's my home", posts.length);
-
-  if (posts.length === 0) {
-    console.log("Yes it is empty");
-
+  if (loading) {
     return (
-      <div className="w-full py-8 mt-4 text-center">
-        <Container>
-          <div className="flex flex-wrap">
-            <div className="p-2 w-full">
-              <h1 className="text-2xl font-bold hover:text-gray-500">
-                Login to read posts
-              </h1>
-            </div>
-          </div>
-        </Container>
+      <div className="w-full py-8 flex justify-center items-center min-h-screen">
+        <p className="text-gray-500 text-lg">Loading posts...</p>
       </div>
     );
-  } else
-    return (
-      <div className="w-full py-8">
-        <Container>
-          <div className="flex flex-wrap">
-          {posts.map((post) => (
-                        <div key={post.$id} className='p-2 w-1/4'>
-                            <Postcard {...post} />
-                        </div>
-                    ))}
+  }
+
+  return (
+    <div className="w-full py-8">
+      <Container>
+        {posts.length === 0 ? (
+          <div className="text-center mt-10">
+            <h1 className="text-2xl font-bold text-gray-700">
+              Login to read posts
+            </h1>
           </div>
-        </Container>
-      </div>
-    );
+        ) : (
+          <div className="flex flex-wrap">
+            {posts.map((post) => (
+              <div key={post.$id} className="p-2 w-full sm:w-1/2 lg:w-1/4">
+                <Postcard {...post} />
+              </div>
+            ))}
+          </div>
+        )}
+      </Container>
+    </div>
+  );
 }
+
 export default Home;

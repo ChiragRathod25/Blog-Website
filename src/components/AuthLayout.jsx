@@ -8,22 +8,26 @@ export default function AuthLayout({ children, authentication = true }) {
   const authStatus = useSelector((state) => state.auth.status);
 
   useEffect(() => {
-    // if (authStatus === true) navigate("/");
-    // else if (authStatus === false) navigate("/login");
-    // setLoader(false);
-
-    // let authValue = authStatus === true ? true : false;
-    if(authentication===false){
-      console.log("Authentication is not required !")
+    if (authentication === false) {
+      console.log("[AuthLayout] Authentication is not required!");
+    } else if (authentication && authStatus !== authentication) {
+      navigate("/login");
+    } else if (!authentication && authStatus !== authentication) {
+      navigate("/");
     }
-    else if (authentication && authStatus !== authentication) 
-        navigate("/login");
-    
-    else if (!authentication && authStatus !== authentication) 
-        navigate("/");
-    console.log("loader changed to ",loader)
-    setLoader(false);
+
+    setTimeout(() => {
+      setLoader(false);
+    }, 500); // Smooth transition with minimal delay
   }, [authStatus, navigate, authentication]);
 
-  return loader ? <h1>Loading...</h1> : <>{children}</>;
+  if (loader) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }
